@@ -1,0 +1,21 @@
+- name: Post init tasks for K8s-nodes
+  hosts: k8s-nodes
+  become: yes
+  become_user: root
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Upgrade all packages to the latest version
+      apt:
+        #update_cache: yes
+        upgrade: yes
+      register: upgrade_result
+
+    - name: Reboot the server if kernel or system packages were upgraded
+      reboot:
+      when: upgrade_result.changed
+
+    - name: Install  Tailscale
+      include_tasks: tasks/init_tailscale.yaml
+      vars:
+        tailscale_hostname: "{{ hostname_map[inventory_hostname] }}"

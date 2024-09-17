@@ -1,0 +1,59 @@
+services:
+  tailscale-git:
+    image: tailscale/tailscale:latest
+    hostname: git
+    environment:
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+    volumes:
+      - /var/lib/tailscale-git/state:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - sys_module
+    restart: unless-stopped
+  git:
+    depends_on:
+      - tailscale-git
+      - db
+    network_mode: service:tailscale-git
+    image: gitea/gitea:latest
+    volumes:
+      - /var/lib/gitea:/data
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__server__HTTP_PORT=80
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=localhost:5432
+      - GITEA__database__NAME=gitea
+      - GITEA__database__USER=gitea
+      - GITEA__database__PASSWD=gitea
+    restart: always
+  db:
+    depends_on:
+      - tailscale-git
+    image: postgres:14
+    restart: always
+    environment:
+      - POSTGRES_USER=gitea
+      - POSTGRES_PASSWORD=gitea
+      - POSTGRES_DB=gitea
+    network_mode: service:tailscale-git
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+  runner:
+    depends_on:
+      - git
+    network_mode: service:tailscale-git
+    image: gitea/act_runner:nightly
+    environment:
+      CONFIG_FILE: /config.yaml
+      GITEA_INSTANCE_URL: "http://localhost"
+      GITEA_RUNNER_REGISTRATION_TOKEN: "x"
+      GITEA_RUNNER_NAME: "main"
+      GITEA_RUNNER_LABELS: "main"
+    volumes:
+      - ./config.yaml:/config.yaml
+      - ./data:/data
+      - /var/run/docker.sock:/var/run/docker.sock

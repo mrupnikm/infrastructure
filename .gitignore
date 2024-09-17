@@ -1,0 +1,3 @@
+/proxmox/terraform/.terraform.lock.hcl
+/proxmox/terraform/terraform.tfstate
+/proxmox/terraform/.terraform/

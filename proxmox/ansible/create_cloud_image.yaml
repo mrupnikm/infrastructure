@@ -1,0 +1,49 @@
+- name: Create VM template
+  hosts: proxmox
+  become: yes
+  become_user: root
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Download the Ubuntu Cloud Image
+      get_url:
+        url: "{{ proxmox_vm_template_image_url }}"
+        dest: "/tmp/{{ proxmox_vm_template_image_name }}"
+
+    - name: Create the VM
+      command: >
+        qm create {{ proxmox_vm_template_id }}
+        --memory {{ proxmox_vm_template_memory }}
+        --core {{ proxmox_vm_template_core }}
+        --name {{ proxmox_vm_template_name }}
+        --net0 {{ proxmox_vm_template_net0 }}
+
+    - name: Import the disk image
+      command: >
+        qm disk import {{ proxmox_vm_template_id }} /tmp/{{ proxmox_vm_template_image_name }} {{ proxmox_vm_template_storage }}
+    - name: Resize disk
+      command: >
+        qemu-img resize {{ mount_point }}/images/{{ proxmox_vm_template_id }}{{ proxmox_vm_template_disk_path }} {{ proxmox_vm_template_disk_size }}
+
+    - name: Set the SCSI hardware and disk
+      command: >
+        qm set {{ proxmox_vm_template_id }} --scsihw {{ proxmox_vm_template_scsihw }} --scsi0 {{ proxmox_vm_template_storage }}:{{ proxmox_vm_template_id }}{{ proxmox_vm_template_disk_path }}
+
+    - name: Attach the CloudInit disk
+      command: >
+        qm set {{ proxmox_vm_template_id }} --ide2 {{ proxmox_vm_template_storage }}:{{ proxmox_vm_template_cloudinit }}    
+
+    - name: Configure boot settings
+      command: >
+        qm set {{ proxmox_vm_template_id }}
+        --boot {{ proxmox_vm_template_boot_order }}
+        --bootdisk {{ proxmox_vm_template_bootdisk }}
+
+    - name: Set serial and VGA options
+      command: >
+        qm set {{ proxmox_vm_template_id }}
+        --serial0 {{ proxmox_vm_template_serial0 }}
+        --vga {{ proxmox_vm_template_vga }}
+
+    - name: Convert the VM to a template
+      command: qm template {{ proxmox_vm_template_id }}

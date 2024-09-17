@@ -1,0 +1,12 @@
+user: "mrupnik"
+
+docker_version: "latest"
+
+tailscale_hostname: "git"
+
+gitea_version: "1.22.2"
+gitea_data_dir: "/var/lib/gitea"
+
+gitea_runner_version: "nightly"
+gitea_runner_token: ""
+

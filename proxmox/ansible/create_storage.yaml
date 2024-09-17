@@ -1,0 +1,61 @@
+- name: Provision Disk on Proxmox Host
+  hosts: proxmox
+  become: yes
+  become_user: root
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Create a new GPT partition on {{ disk_device }}
+      command: /sbin/sgdisk -n{{ partition_number }} -t{{ partition_number }}:{{ partition_type }} {{ disk_device }}
+      register: sgdisk_output
+      changed_when: "'Creating new GPT entries in memory.' in sgdisk_output.stdout"
+      when: partition == true
+
+    - name: Create a filesystem on {{ disk_device }}{{ partition_number }}
+      command: /sbin/mkfs -t {{ filesystem_type }} {{ disk_device }}{{ partition_number }}
+      register: mkfs_output
+      changed_when: "'Creating filesystem with' in mkfs_output.stdout"
+      when: partition == true
+
+    - name: Retrieve filesystem UUID
+      command: /sbin/blkid {{ disk_device }}{{ partition_number }} -o export
+      register: blkid_output
+      when: partition == true
+
+    - name: Create mount point
+      file:
+        path: "{{ mount_point }}"
+        state: directory
+        mode: '0755'
+      when: partition == true
+
+    - name: Mount the new filesystem
+      mount:
+        path: "{{ mount_point }}"
+        src: "{{ disk_device }}{{ partition_number }}"
+        fstype: "{{ filesystem_type }}"
+        state: mounted
+      when: partition == true
+
+    - name: Ensure the mount point is mounted on boot
+      mount:
+        path: "{{ mount_point }}"
+        src: "{{ disk_device }}{{ partition_number }}"
+        fstype: "{{ filesystem_type }}"
+        opts: defaults
+        state: present
+      when: partition == true
+
+    - name: Print filesystem UUID
+      debug:
+        msg: "Filesystem UUID: {{ blkid_output.stdout }}"
+      when: partition == true
+
+    - name: Create Proxmox storage configuration
+      command: >
+        pvesh create /storage --storage {{ proxmox_storage_name }} --type dir --path {{ mount_point }} --content iso,backup,vztmpl,rootdir,images,snippets
+      register: pvesh_output
+
+    - name: Print Proxmox storage creation output
+      debug:
+        msg: "{{ pvesh_output.stdout }}"

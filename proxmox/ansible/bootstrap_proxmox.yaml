@@ -1,0 +1,11 @@
+- name: Post install tasks for Proxmox
+  hosts: proxmox
+  become: yes
+  become_user: root
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Install  Tailscale
+      include_tasks: tasks/init_tailscale.yaml
+      vars:
+        tailscale_hostname: "{{ tailscale_hostname }}"

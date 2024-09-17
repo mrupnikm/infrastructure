@@ -1,0 +1,20 @@
+- name: Provision API token
+  hosts: proxmox
+  become: yes
+  become_user: root
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Create Proxmox API Token
+      command: >
+        pveum user token add "{{proxmox_user}}" "{{proxmox_token_name}}"
+      register: token_creation_result
+
+    - name: Print the value of the API Token Creation Command
+      debug:
+        msg: "Token creation command output: {{ token_creation_result.stdout }}"
+
+    - name: Assign Role to API Token
+      command: >
+        pveum acl modify / --token '{{proxmox_user}}!{{proxmox_token_name}}' --role {{proxmox_token_role}}
+      register: acl_modify_result

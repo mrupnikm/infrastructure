@@ -1,0 +1,44 @@
+#
+# tailscale
+#
+tailscale_auth_token: ""
+tailscale_hostname: "proxmox"
+
+#
+# token creation
+#
+proxmox_user: "root@pam"
+proxmox_token_name: "terraform"
+proxmox_token_role: "Administrator"
+
+#
+# sdb dick creation and mounting as storage
+#
+partition: false # if the disk is not mounted and partitioned correctly set to true
+disk_device: /dev/sdb
+partition_number: 1
+partition_type: 8300
+filesystem_type: ext4
+mount_point: /mnt/pve/main
+proxmox_storage_name: main
+
+#
+# ubuntu cloud image template
+#
+proxmox_vm_template_id: 8002
+proxmox_vm_template_memory: 4096
+proxmox_vm_template_core: 2
+proxmox_vm_template_name: ubuntu-cloud-noble
+proxmox_vm_template_net0: "virtio,bridge=vmbr0"
+proxmox_vm_template_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+proxmox_vm_template_image_name: "noble-server-cloudimg-amd64.img"
+proxmox_vm_template_storage: "main"
+proxmox_vm_template_scsihw: "virtio-scsi-pci"
+proxmox_vm_template_disk_path: "/vm-{{ proxmox_vm_template_id }}-disk-0.raw"
+proxmox_vm_template_ipconfig0: "ip=192.168.1.20/24 gw=192.168.1.1"
+proxmox_vm_template_boot_order: "c"
+proxmox_vm_template_bootdisk: "scsi0"
+proxmox_vm_template_serial0: "socket"
+proxmox_vm_template_vga: "serial0"
+proxmox_vm_template_cloudinit: "cloudinit"
+proxmox_vm_template_disk_size: "32G"

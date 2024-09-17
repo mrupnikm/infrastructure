@@ -1,0 +1,66 @@
+---
+- name: Setup Docker, Docker Compose, and Gitea
+  hosts: git_servers
+  become: yes
+  tasks:
+    - name: Update packages
+      apt:
+        update_cache: yes
+        upgrade: yes
+        autoremove: yes
+
+    - name: Install Docker dependencies
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        state: present
+
+    - name: get docker convenience script
+      shell: curl -fsSL https://get.docker.com -o get-docker.sh
+      args:
+        creates: /home/{{ user }}/get-docker.sh
+    - name: install docker
+      shell: sh /home/{{ user }}/get-docker.sh
+      args:
+        creates: /usr/bin/docker
+    - name: make {{ user }} user execute docker commands
+      shell: usermod -aG docker {{ user }}
+
+    - name: Ensure Docker service is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Create Gitea directory
+      file:
+        path: "{{ gitea_data_dir }}"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0755'
+
+    - name: Touch the file if it does not exist
+      ansible.builtin.file:
+        path: "{{ gitea_data_dir }}/config.yaml"
+        state: touch
+
+    - name: Create tailscale directory
+      file:
+        path: "/var/lib/tailscale/state"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0755'
+
+    - name: Include Gitea docker compose task
+      include_tasks: install_docker_compose_gitea.yml
+
+    - name: Start Gitea with Docker Compose
+      command: docker compose up -d
+      args:
+        chdir: "{{ gitea_data_dir }}"

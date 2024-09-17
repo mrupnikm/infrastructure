@@ -1,0 +1,22 @@
+---
+  - name: Add Tailscale GPG key
+    shell: curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
+
+  - name: Add Tailscale APT repository
+    shell:  curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.tailscale-keyring.list | tee /etc/apt/sources.list.d/tailscale.list
+
+  - name: Update APT package index
+    #NOTE to ignore signing fails from enterprise proxmox
+    ignore_errors: yes
+    apt:
+      update_cache: yes
+
+  - name: Install Tailscale package
+    apt:
+      name: tailscale
+      state: present
+
+  - name: Start Tailscale
+    command: tailscale up --hostname="{{ tailscale_hostname }}" --authkey="{{ tailscale_auth_token }}"
+    register: tailscale_up
+    changed_when: tailscale_up.rc == 0
