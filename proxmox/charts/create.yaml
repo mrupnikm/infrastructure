@@ -1,0 +1,16 @@
+- hosts: localhost
+  gather_facts: no
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Install Operators
+      include_tasks: playbooks/template_and_apply.yaml
+      vars:
+        charts:
+          - name: tailscale
+
+    - name: Install Applications
+      include_tasks: playbooks/template_and_apply.yaml
+      vars:
+        charts:
+          - name: nextcloud
