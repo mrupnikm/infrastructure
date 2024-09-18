@@ -1,0 +1,16 @@
+- hosts: localhost
+  gather_facts: no
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Create tmp directory
+      file:
+        path: ./tmp
+        state: directory
+
+    - name: Render the Jinja2 templates
+      template:
+        src: "{{ item }}"
+        dest: "./tmp/{{ item | basename | regex_replace('.j2$', '') }}"
+      with_fileglob:
+        - "./templates/*.j2"

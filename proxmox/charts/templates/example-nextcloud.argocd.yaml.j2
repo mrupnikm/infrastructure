@@ -5,17 +5,15 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://pkgs.tailscale.com/helmcharts'
-    targetRevision: 1.72.1
+    repoURL: {{ nextcloud_repoURL }}
+    targetRevision: {{ nextcloud_chart_version }}
     helm:
       values: >-
-        oauth:
-          clientId: X
-          clientSecret: X
-    chart: tailscale-operator
+        {{ nextcloud_values | to_nice_yaml | indent(8)}}
+    chart: nextcloud
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: tailscale
+    namespace: default
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

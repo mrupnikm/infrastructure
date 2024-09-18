@@ -19,6 +19,7 @@
         --net0 {{ proxmox_vm_template_net0 }}
 
     - name: Import the disk image
+
       command: >
         qm disk import {{ proxmox_vm_template_id }} /tmp/{{ proxmox_vm_template_image_name }} {{ proxmox_vm_template_storage }}
     - name: Resize disk
