@@ -1,8 +1,21 @@
-  #
-  # common configuration
-  #
-  common_service_annotation: 'tailscale.com/expose: "true"'
+#
+#
+#
 
-  charts:
-    - name: nextcloud
-    - name: tailscale
+
+#
+# common configuration
+#
+common_service_annotation: 'tailscale.com/expose: "true"'
+common_sync_options:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+
+#
+# list of deployable manifests
+#
+
+charts:
+- name: tailscale
+- name: nextcloud

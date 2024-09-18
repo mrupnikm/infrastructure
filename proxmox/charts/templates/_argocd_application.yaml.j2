@@ -10,11 +10,9 @@ spec:
     targetRevision: {{ chart_version }}
     helm:
       values: >-
-        {{ chart_values | to_nice_yaml | indent(8) }}
+        {{ chart_values | to_nice_yaml | indent(8   ) }}
     chart: {{ chart_name }}
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: {{ namespace }}
-  syncPolicy:
-    syncOptions:
-      - CreateNamespace=true
+  {{ common_sync_options | to_nice_yaml | indent(1) }}
