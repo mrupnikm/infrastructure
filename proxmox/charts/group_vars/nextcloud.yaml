@@ -1,0 +1,6 @@
+repoURL: 'https://nextcloud.github.io/helm/'
+chart_version: 5.5.6
+namespace: "nextcloud"
+chart_values:
+  service:
+    annotations: "{{ common_service_annotation }}"

@@ -1,26 +1,8 @@
-#
-# common configuration
-#
-common_service_annotation: 'tailscale.com/expose: "true"'
+  #
+  # common configuration
+  #
+  common_service_annotation: 'tailscale.com/expose: "true"'
 
-
-
-#
-# Tailscale operator
-#
-tailscale_repoURL: 'https://pkgs.tailscale.com/helmcharts'
-tailscale_chart_version: 1.72.1
-tailscale_project: "default"
-tailscale_values:
-  oauth:
-    clientId: X
-    clientSecret: X
-
-#
-# Nextclouod
-#
-nextcloud_repoURL: 'https://nextcloud.github.io/helm/'
-nextcloud_chart_version: 5.5.6
-nextcloud_values:
-  service:
-    annotations: "{{ common_service_annotation }}"
+  charts:
+    - name: nextcloud
+    - name: tailscale

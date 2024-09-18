@@ -1,19 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  name: {{ chart_name }}
   namespace: argocd
 spec:
   project: default
   source:
-    repoURL: {{ nextcloud_repoURL }}
-    targetRevision: {{ nextcloud_chart_version }}
+    repoURL: {{ repoURL }}
+    targetRevision: {{ chart_version }}
     helm:
       values: >-
-        {{ nextcloud_values | to_nice_yaml | indent(8)}}
-    chart: nextcloud
+        {{ chart_values | to_nice_yaml | indent(8) }}
+    chart: {{ chart_name }}
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: default
+    namespace: {{ namespace }}
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

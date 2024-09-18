@@ -3,14 +3,24 @@
   vars_files:
     - vars.yml
   tasks:
-    - name: Create tmp directory
-      file:
-        path: ./tmp
-        state: directory
+    - name: Include variables for each chart
+      include_vars:
+        file: "group_vars/{{ item.name }}.yaml"
+        name: chart_vars
+      loop: "{{ charts }}"
 
-    - name: Render the Jinja2 templates
+    - name: Debug chart values
+      debug:
+        msg: "{{ chart_vars.values }}"
+
+    - name: Render the Jinja2 template for each chart
       template:
-        src: "{{ item }}"
-        dest: "./tmp/{{ item | basename | regex_replace('.j2$', '') }}"
-      with_fileglob:
-        - "./templates/*.j2"
+        src: templates/_argocd_application.yaml.j2
+        dest: "./tmp/{{ item.name }}_application.yaml"
+      loop: "{{ charts }}"
+      vars:
+        chart_name: "{{ item.name }}"
+        repoURL: "{{ chart_vars.repoURL }}"
+        chart_version: "{{ chart_vars.chart_version }}"
+        namespace: "{{ chart_vars.namespace }}"
+        chart_values: "{{ chart_vars.chart_values }}"
