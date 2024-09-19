@@ -2,3 +2,6 @@
 /proxmox/terraform/terraform.tfstate
 /proxmox/terraform/.terraform/
 /proxmox/charts/tmp/
+/proxmox/kubespray/kubespray/
+/proxmox/kubespray/kubespray-venv/
+/proxmox/kubespray/kubespray/

@@ -10,10 +10,13 @@ play:
 # A map of types and specific manifests
 installation_type:
   - operators:
-      - name: tailscale
+      #- name: cert-manager
+      - name: nginx-ingress
+      # - name: tailscale
   - applications:
-      - name: nextcloud
-      - name: harbor
+      - name: podinfo
+      #- name: nextcloud
+      #- name: harbor
 
 #
 # Common chart configurations
@@ -21,8 +24,8 @@ installation_type:
 common_service_annotation: 'tailscale.com/expose: "true"'
 common_sync_options:
   syncPolicy:
-    automated:
-      prune: false
-      selfHeal: false
+    #automated:
+    #  prune: false
+    #  selfHeal: false
     syncOptions:
     - CreateNamespace=true

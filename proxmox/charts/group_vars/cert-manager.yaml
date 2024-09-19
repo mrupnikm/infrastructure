@@ -1,0 +1,6 @@
+repoURL: 'https://charts.jetstack.io'
+chart_version: v1.15.3
+namespace: "cert-manager"
+chart_values:
+  crds:
+    enabled: true

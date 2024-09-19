@@ -3,5 +3,6 @@ chart_version: 1.72.1
 namespace: "tailscale"
 chart_values:
   oauth:
-    clientId: X
-    clientSecret: X
+    clientId: x
+    clientSecret: x
+

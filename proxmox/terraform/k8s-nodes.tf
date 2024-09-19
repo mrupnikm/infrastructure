@@ -13,7 +13,7 @@ variable "k8-nodes" {
     vm1 = {
       name      = "cp1"
       vmid      = "200"
-      memory    = 2048
+      memory    = 4096
       cores     = 2
       ipconfig0 = "ip=192.168.1.20/24,gw=192.168.1.1"
       clone     = "ubuntu-cloud-noble"
@@ -21,17 +21,9 @@ variable "k8-nodes" {
     vm2 = {
       name      = "wk1"
       vmid      = "300"
-      memory    = 4096
-      cores     = 4
+      memory    = 10240
+      cores     = 6
       ipconfig0 = "ip=192.168.1.30/24,gw=192.168.1.1"
-      clone     = "ubuntu-cloud-noble"
-    }
-    vm3 = {
-      name      = "wk2"
-      vmid      = "310"
-      memory    = 4096
-      cores     = 4
-      ipconfig0 = "ip=192.168.1.40/24,gw=192.168.1.1"
       clone     = "ubuntu-cloud-noble"
     }
   }
@@ -78,7 +70,7 @@ resource "proxmox_vm_qemu" "k8s_vms" {
     scsi {
       scsi0 {
         disk {
-          size    = "32G"
+          size    = "256G"
           storage = "main"
         }
       }

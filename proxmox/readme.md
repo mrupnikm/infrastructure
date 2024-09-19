@@ -1,4 +1,4 @@
-# Proxmox Infrastructure Setup Guide
+# Proxmox Infrastructure Setup Guide 
 
 This guide will walk you through setting up a Proxmox infrastructure using Terraform and Ansible. Make sure you
 have already installed Proxmox on your hardware and gained SSH connectivity to it.

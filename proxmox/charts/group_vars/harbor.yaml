@@ -5,6 +5,10 @@ chart_values:
   persistence:
     enabled: false
   expose:
-    type: ClusterIP
+    type: clusterIP
+    tls:
+      auto:
+        commonName: "ass"
   core:
     serviceAnnotations: "{{ common_service_annotation }}"
+
