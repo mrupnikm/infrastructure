@@ -1,21 +1,28 @@
 #
-#
+# General playbook configuration
 #
 
+# A list of what types of ArgoCD applications manifests the playbook will trigger
+play:
+  - applications
+  - operators
+
+# A map of types and specific manifests
+installation_type:
+  - operators:
+      - name: tailscale
+  - applications:
+      - name: nextcloud
+      - name: harbor
 
 #
-# common configuration
+# Common chart configurations
 #
 common_service_annotation: 'tailscale.com/expose: "true"'
 common_sync_options:
   syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
     syncOptions:
     - CreateNamespace=true
-
-#
-# list of deployable manifests
-#
-
-charts:
-- name: tailscale
-- name: nextcloud

@@ -1,16 +1,51 @@
 - hosts: localhost
   gather_facts: no
+  vars:
+    play:
+      - applications
   vars_files:
     - vars.yml
   tasks:
     - name: Install Operators
       include_tasks: playbooks/template_and_apply.yaml
+      when: "'operators' in play"
       vars:
-        charts:
-          - name: tailscale
+        dir: "operators"
+        charts: "{{ installation_type | selectattr('operators', 'defined') | map(attribute='operators') | first }}"
 
     - name: Install Applications
       include_tasks: playbooks/template_and_apply.yaml
+      when: "'applications' in play"
       vars:
-        charts:
-          - name: nextcloud
+        dir: "applications"
+        charts: "{{ installation_type | selectattr('applications', 'defined') | map(attribute='applications') | first }}"
+
+- hosts: k8s-nodes
+  gather_facts: no
+  vars:
+    play:
+      - applications
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Copy tmp directory
+      copy:
+        src: ./tmp/
+        dest: /tmp
+        mode: '0644'
+        directory_mode: '0755'
+
+    - name: Find all YAML files in /tmp/applications
+      command: "find /tmp/applications -name '*.yaml'"
+      become: true
+      register: found_files
+
+    - name: Debug found files
+      debug:
+        msg: "{{ found_files.stdout_lines }}"
+
+    - name: Apply Kubernetes manifests
+      when: "'applications' in play"
+      command: "sudo kubectl apply -f {{ item }}"
+      become: true
+      loop: "{{ found_files.stdout_lines }}"

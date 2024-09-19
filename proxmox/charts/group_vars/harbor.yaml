@@ -1,0 +1,10 @@
+repoURL: 'https://helm.goharbor.io'
+chart_version: 1.15.1
+namespace: "harbor"
+chart_values:
+  persistence:
+    enabled: false
+  expose:
+    type: ClusterIP
+  core:
+    serviceAnnotations: "{{ common_service_annotation }}"
