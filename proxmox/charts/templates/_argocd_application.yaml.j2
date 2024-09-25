@@ -7,11 +7,14 @@ spec:
   project: default
   source:
     repoURL: {{ repoURL }}
-    targetRevision: {{ chart_version }}
+    path: {{ git_path if git_path is defined else "" }}
+    targetRevision: {{ git_revision if git_revision is defined else chart_version }}
     helm:
-      values: >-
-        {{ chart_values | to_nice_yaml | indent(8   ) }}
-    chart: {{ chart_name }}
+      parameters:
+        {{ chart_parameters | to_nice_yaml | indent(8) }}
+      values: |-
+        {{ chart_values | to_nice_yaml | indent(8) }}
+    chart: {{ "" if git_revision is defined else chart_name }}
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: {{ namespace }}

@@ -7,14 +7,14 @@ chart_values:
     className: nginx
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod # name of the issuer we defined before
-      external-dns.alpha.kubernetes.io/hostname: podinfo.tailf3f14.ts.net
+      external-dns.alpha.kubernetes.io/hostname: podinfo.k8s.olmden.si
       kubernetes.io/tls-acme: "true"
     hosts:
-      - host: podinfo.tailf3f14.ts.net
+      - host: podinfo.k8s.olmden.si
         paths:
           - path: /
             pathType: ImplementationSpecific
-      tls:
-        - secretName: podinfo.tailf3f14.ts.net
-          hosts:
-            - podinfo.tailf3f14.ts.net
+    tls:
+      - secretName: olmden-si
+        hosts:
+          - podinfo.k8s.olmden.si

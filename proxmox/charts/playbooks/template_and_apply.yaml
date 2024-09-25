@@ -33,3 +33,5 @@
         chart_version: "{{ hostvars['localhost'][item.name ~ '_vars'].chart_version }}"
         namespace: "{{ hostvars['localhost'][item.name ~ '_vars'].namespace }}"
         chart_values: "{{ hostvars['localhost'][item.name ~ '_vars'].chart_values }}"
+        git_path: "{{ hostvars['localhost'][item.name ~ '_vars'].git_path }}"
+        git_revision: "{{ hostvars['localhost'][item.name ~ '_vars'].git_revision }}"

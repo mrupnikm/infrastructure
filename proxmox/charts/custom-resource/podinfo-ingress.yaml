@@ -3,14 +3,14 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    external-dns.alpha.kubernetes.io/hostname: podinfo.tailf3f14.ts.net
+    external-dns.alpha.kubernetes.io/hostname: podinfo.k8s.mr
     kubernetes.io/tls-acme: "true"
   name: prometheus-kps-podinfo
   namespace: prometheus
 spec:
   ingressClassName: nginx
   rules:
-    - host: podinfo.tailf3f14.ts.net
+    - host: podinfo.k8s.mr
       http:
         paths:
           - backend:
@@ -21,6 +21,6 @@ spec:
             path: /
             pathType: Prefix
   tls:
-    - secretName: podinfo.tailf3f14.ts.net
+    - secretName: podinfo.k8s.mr
       hosts:
-        - podinfo.tailf3f14.ts.net
+        - podinfo.k8s.mr

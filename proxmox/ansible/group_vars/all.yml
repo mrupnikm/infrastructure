@@ -1,4 +1,15 @@
 #
+# init_VM.yaml run config
+#
+plays:
+  proxmox:
+    run: false
+  k8s-nodes:
+    run: false
+  pihole:
+    run: true
+
+#
 # tailscale
 #
 tailscale_auth_token: ""

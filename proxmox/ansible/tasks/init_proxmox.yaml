@@ -1,0 +1,4 @@
+- name: Install  Tailscale
+  include_tasks: init_tailscale.yaml
+  vars:
+    tailscale_hostname: "{{ tailscale_hostname }}"

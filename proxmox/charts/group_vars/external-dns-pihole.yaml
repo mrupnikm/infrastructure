@@ -1,0 +1,7 @@
+repoURL: 'https://github.com/mrupnikm/helm-charts.git'
+git_revision: "main"
+git_path: "charts/external-dns-pihole"
+namespace: "external-dns-pihole"
+chart_values:
+  serviceURL: "http://ts-ts-egress-pihole-mhg4w.tailscale.svc.cluster.local"
+  namespace: external-dns-pihole

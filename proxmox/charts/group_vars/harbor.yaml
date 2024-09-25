@@ -2,13 +2,17 @@ repoURL: 'https://helm.goharbor.io'
 chart_version: 1.15.1
 namespace: "harbor"
 chart_values:
-  persistence:
-    enabled: false
+  externalURL: "https://harbor.olmden.si"
   expose:
-    type: clusterIP
+    ingress:
+      hosts:
+        core: "harbor.olmden.si"
+      enabled: true
+      className: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod # name of the issuer we defined before
+        external-dns.alpha.kubernetes.io/hostname: "harbor.olmden.si"
+        kubernetes.io/tls-acme: "true"
     tls:
-      auto:
-        commonName: "ass"
-  core:
-    serviceAnnotations: "{{ common_service_annotation }}"
-
+      secret:
+        secretName: harbor.olmden-si

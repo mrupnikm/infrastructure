@@ -1,0 +1,22 @@
+repoURL: 'https://prometheus-community.github.io/helm-charts'
+chart_version: 25.27.0
+namespace: "prometheus"
+chart_values:
+  server:
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod # name of the issuer we defined before
+        external-dns.alpha.kubernetes.io/hostname: prometheus.k8s.olmden.si
+        kubernetes.io/tls-acme: "true"
+      hosts:
+        - prometheus.k8s.olmden.si
+      tls:
+        - secretName: olmden-si
+          hosts:
+            - prometheus.k8s.olmden.si
+    persistentVolume:
+      storageClass: local-storage
+  alertmanager:
+    enabled: false

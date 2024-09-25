@@ -1,0 +1,34 @@
+- name: Update apt package list
+  apt:
+    update_cache: yes
+
+- name: Upgrade all packages
+  apt:
+    upgrade: dist
+    update_cache: yes
+
+- name: Install qemu-guest-agent
+  apt:
+    name: qemu-guest-agent
+    state: present
+
+- name: Install  Tailscale
+  include_tasks: init_tailscale.yaml
+  vars:
+      tailscale_hostname: "{{ inventory_hostname }}"
+
+- name: Reboot the server if a kernel upgrade happened
+  reboot:
+    msg: "Reboot initiated by Ansible after apt upgrade"
+    connect_timeout: 5
+    reboot_timeout: 600
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+
+- name: Wait for server to come back online after reboot
+  wait_for_connection:
+    timeout: 300
+
+- name: Finished and back online
+  debug:
+    msg: "Server is back online after reboot and ready for use."

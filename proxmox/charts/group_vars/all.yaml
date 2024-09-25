@@ -4,19 +4,21 @@
 
 # A list of what types of ArgoCD applications manifests the playbook will trigger
 play:
-  - applications
+  #- applications
   - operators
 
 # A map of types and specific manifests
 installation_type:
   - operators:
       #- name: cert-manager
-      - name: nginx-ingress
+      #- name: nginx-ingress
+       - name: prometheus
       # - name: tailscale
+       - name: external-dns-pihole
   - applications:
-      - name: podinfo
-      #- name: nextcloud
-      #- name: harbor
+     # - name: podinfo
+     #- name: nextcloud
+     #      - name: harbor
 
 #
 # Common chart configurations

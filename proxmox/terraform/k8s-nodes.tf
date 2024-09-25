@@ -26,6 +26,14 @@ variable "k8-nodes" {
       ipconfig0 = "ip=192.168.1.30/24,gw=192.168.1.1"
       clone     = "ubuntu-cloud-noble"
     }
+    vm3 = {
+      name      = "pihole"
+      vmid      = "400"
+      memory    = 1000
+      cores     = 2
+      ipconfig0 = "ip=192.168.1.40/24,gw=192.168.1.1"
+      clone     = "ubuntu-cloud-noble"
+    }
   }
 }
 resource "proxmox_vm_qemu" "k8s_vms" {

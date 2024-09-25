@@ -1,0 +1,32 @@
+- name: Post install tasks for Proxmox
+  hosts: proxmox
+  become: yes
+  become_user: root
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Initialize OS
+      include_tasks: tasks/init_os.yaml
+      when: plays['proxmox'].run
+
+- name: Post install tasks for K8s nodes
+  hosts: k8s-nodes
+  become: yes
+  become_user: root
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Initialize OS
+      include_tasks: tasks/init_VM_os.yaml
+      when: plays['k8s-nodes'].run
+
+- name: Init Pihole
+  hosts: pihole
+  become: yes
+  become_user: root
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Initialize OS
+      include_tasks: tasks/init_VM_os.yaml
+      when: plays['pihole'].run
