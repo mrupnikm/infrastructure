@@ -1,0 +1,23 @@
+- name: Recreate directories
+  include_role:
+    name: transfer_manifests
+    tasks_from: recreate
+  vars:
+    local_dir: "./tmp/egress"
+    remote_dir: "/tmp/egress"
+
+- name: Generate Kubernetes secret YAML files
+  delegate_to: localhost
+  template:
+    src: "templates/_egress.yaml.j2"
+    dest: "./tmp/egress/{{ item.name }}-secret.yaml"
+  loop: "{{ services }}"
+
+- name: Copy manifests to remotes and apply
+  include_role:
+    name: transfer_manifests
+    tasks_from: copy_and_apply
+  vars:
+    local_dir: "./tmp/egress"
+    remote_dir: "/tmp/egress"
+

@@ -1,15 +1,21 @@
-- name: Set Secrets
-  hosts: k8s-nodes
-  roles:
-    - set_secrets
+# - name: Set Secrets
+#   hosts: k8s-nodes
+#   roles:
+#     - set_secrets
 
-- name: Deploy Operators
+# - name: Deploy Operators
+#   hosts: k8s-nodes
+#   vars:
+#     apps:
+#       - "cert-manager"
+#       - "ingress-nginx"
+#       - "tailscale-operator"
+#       - "external-dns-pihole"
+#   roles:
+#     - argocd_charts
+
+- name: Set Egress
   hosts: k8s-nodes
-  vars:
-    apps:
-      - "cert-manager"
-      - "ingress-nginx"
-      - "tailscale-operator"
-      - "external-dns-pihole"
   roles:
-    - argocd_charts
+    - set_egress
+    
