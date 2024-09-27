@@ -18,7 +18,7 @@
   delegate_to: localhost
   template:
     src: "templates/_argocd_application.yaml.j2"
-    dest: "./tmp/apps/{{ item.ansible_facts.namespace }}_application.yaml"
+    dest: "./tmp/apps/{{ item.ansible_facts.chart_name }}_application.yaml"
   loop: "{{ chart_vars.results }}"
   loop_control:
     loop_var: "item"

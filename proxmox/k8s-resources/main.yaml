@@ -14,8 +14,15 @@
 #   roles:
 #     - argocd_charts
 
-- name: Set Egress
-  hosts: k8s-nodes
-  roles:
-    - set_egress
+# - name: Set Egress
+#   hosts: k8s-nodes
+#   roles:
+#     - set_egress
     
+- name: Deploy Operators
+  hosts: k8s-nodes
+  vars:
+    apps:
+      - "kube-prometheus-stack"
+  roles:
+    - argocd_charts
