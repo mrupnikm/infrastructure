@@ -1,0 +1,41 @@
+- name: Recreate directories
+  include_role:
+    name: transfer_manifests
+    tasks_from: recreate
+  vars:
+    local_dir: "./tmp/apps"
+    remote_dir: "/tmp/apps"
+
+- name: Load manifest variables for each app
+  include_vars:
+    file: "vars/{{ item }}.yaml"
+  loop: "{{ apps }}"
+  loop_control:
+    loop_var: "item"
+  register: chart_vars
+
+- name: Render the Jinja2 template for each chart
+  delegate_to: localhost
+  template:
+    src: "templates/_argocd_application.yaml.j2"
+    dest: "./tmp/apps/{{ item.ansible_facts.namespace }}_application.yaml"
+  loop: "{{ chart_vars.results }}"
+  loop_control:
+    loop_var: "item"
+  vars:
+    chart_name1: "{{ item.ansible_facts.chart_name }}"
+    repoURL1: "{{ item.ansible_facts.repoURL }}"
+    chart_version1: "{{ item.ansible_facts.chart_version }}"
+    namespace1: "{{ item.ansible_facts.namespace }}"
+    chart_values1: "{{ item.ansible_facts.chart_values }}"
+    git_path1: "{{ item.ansible_facts.git_path | default('') }}"
+    git_revision1: "{{ item.ansible_facts.git_revision | default('') }}"
+
+- name: Copy manifests to remotes and apply
+  include_role:
+    name: transfer_manifests
+    tasks_from: copy_and_apply
+  vars:
+    local_dir: "./tmp/apps"
+    remote_dir: "/tmp/apps"
+

@@ -1,0 +1,23 @@
+- name: Recreate directories
+  include_role:
+    name: transfer_manifests
+    tasks_from: recreate
+  vars:
+    local_dir: "./tmp/secrets"
+    remote_dir: "/tmp/secrets"
+
+- name: Generate Kubernetes secret YAML files
+  delegate_to: localhost
+  template:
+    src: "templates/_secret.yaml.j2"
+    dest: "./tmp/secrets/{{ item.name }}-secret.yaml"
+  loop: "{{ secrets }}"
+
+- name: Copy manifests to remotes and apply
+  include_role:
+    name: transfer_manifests
+    tasks_from: copy_and_apply
+  vars:
+    local_dir: "./tmp/secrets"
+    remote_dir: "/tmp/secrets"
+

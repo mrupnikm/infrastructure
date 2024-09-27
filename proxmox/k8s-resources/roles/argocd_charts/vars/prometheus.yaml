@@ -1,3 +1,4 @@
+chart_name: "prometheus"
 repoURL: 'https://prometheus-community.github.io/helm-charts'
 chart_version: 25.27.0
 namespace: "prometheus"
@@ -13,7 +14,7 @@ chart_values:
       hosts:
         - prometheus.k8s.olmden.si
       tls:
-        - secretName: olmden-si
+        - secretName: prometheus.k8s.olmden.si
           hosts:
             - prometheus.k8s.olmden.si
     persistentVolume:

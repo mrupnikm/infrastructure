@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ chart_name1 }}
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: {{ repoURL1 }}
+  {% if git_path1 != '' %}
+  path: {{ git_path1 | to_nice_yaml }}
+  {% endif -%}
+  {% if git_revision1 != '' %}
+  targetRevision: {{ git_revision1 | to_nice_yaml }}
+  {% else %}
+  targetRevision: {{ chart_version1 }}
+  {% endif %}
+  helm:
+      values: |-
+        {{ chart_values1 | to_nice_yaml | indent(8) }}
+  {% if git_revision1 == '' %}
+  chart: {{ chart_name1 }}
+  {% endif %}
+destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: {{ namespace1 }}
+  syncPolicy:
+    #automated:
+    #  prune: false
+    #  selfHeal: false
+    syncOptions:
+      - CreateNamespace=true

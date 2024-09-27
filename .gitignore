@@ -1,7 +1,7 @@
 /proxmox/terraform/.terraform.lock.hcl
 /proxmox/terraform/terraform.tfstate
 /proxmox/terraform/.terraform/
-/proxmox/charts/tmp/
+/proxmox/k8s-resources/tmp/
 /proxmox/kubespray/kubespray/
 /proxmox/kubespray/kubespray-venv/
 /proxmox/kubespray/kubespray/

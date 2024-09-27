@@ -1,8 +1,5 @@
+chart_name: "tailscale-operator"
 repoURL: 'https://pkgs.tailscale.com/helmcharts'
 chart_version: 1.72.1
 namespace: "tailscale"
-chart_values:
-  oauth:
-    clientId: x
-    clientSecret: x
-
+chart_values: {}

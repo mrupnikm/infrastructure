@@ -1,0 +1,16 @@
+- name: Copy tmp directory
+  copy:
+    src: "{{ local_dir }}"
+    dest: "{{ remote_dir }}"
+    mode: '0644'
+    directory_mode: '0755'
+
+- name: Find all YAML files in /tmp/applications
+  command: "find {{ remote_dir }} -name '*.yaml'"
+  become: true
+  register: applications_files
+
+- name: Apply Kubernetes manifests
+  command: "sudo kubectl apply -f {{ item }}"
+  become: true
+  loop: "{{ applications_files.stdout_lines }}"

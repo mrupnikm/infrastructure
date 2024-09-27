@@ -1,3 +1,4 @@
+chart_name: "podinfo"
 repoURL: 'https://stefanprodan.github.io/podinfo'
 chart_version: 6.7.0
 namespace: "podinfo"

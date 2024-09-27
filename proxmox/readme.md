@@ -23,4 +23,4 @@ create an inventory file and apply it with ansible. [Kubespray Installation](kub
 
 ## 4.2. Apply Charts with ArgoCD
 Deploy applications on your Kubernetes cluster using Helm charts and ArgoCD. Find the instructions here.
-[Kubespray Installation](charts)
+[Kubespray Installation](k8s-resources)

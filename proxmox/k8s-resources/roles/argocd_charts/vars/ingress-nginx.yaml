@@ -1,3 +1,4 @@
+chart_name: "ingress-nginx"
 repoURL: 'https://kubernetes.github.io/ingress-nginx'
 chart_version: 4.10.1
 namespace: "ingress-nginx"
