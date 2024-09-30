@@ -1,6 +1,6 @@
 chart_name: "kube-prometheus-stack"
 repoURL: 'https://prometheus-community.github.io/helm-charts'
-chart_version: 63.1.0
+chart_version: 62.7.0
 namespace: "monitoring"
 chart_values: 
   grafana:
@@ -8,7 +8,7 @@ chart_values:
       enabled: true
       ingressClassName: nginx
       annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-prod # name of the issuer we defined before
+        cert-manager.io/cluster-issuer: letsencrypt-prod 
         external-dns.alpha.kubernetes.io/hostname: grafana.k8s.olmden.si
         kubernetes.io/tls-acme: "true"
       hosts:
