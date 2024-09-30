@@ -1,0 +1,54 @@
+- name: Deploy Immich docker-compose and configuration
+  hosts: localhost
+  user  : mrupnik
+  vars:
+    immich_version: "v1.116.2"
+    destination_path: "/home/mrupnik/Nix-server/modules/containers/immich" 
+    output_file: "{{ destination_path }}/docker-compose.nix"
+    repo_path: "/home/mrupnik/Nix-server"
+
+  tasks:             
+
+    - name: Checkout new branch
+      command: git checkout -b immich-{{ immich_version }}
+      args:
+        chdir: "{{ repo_path }}"
+      register: git_checkout
+
+    - name: Clone docker-compose.yml from Immich GitHub release
+      get_url:
+        url: "https://github.com/immich-app/immich/releases/download/{{ immich_version }}/docker-compose.yml"
+        dest: "{{ destination_path }}/docker-compose.yml"
+
+    - name: Run command to output a new file (custom command)
+      command: nix run github:aksiksi/compose2nix --  --env_files=.env -project="immich" -runtime="docker"
+      args:
+        chdir: ~/Nix-server/modules/containers/immich 
+
+    - name: Verify docker-compose.nix was created
+      stat:
+        path: "{{ output_file }}"
+      register: output_file_check
+    
+    - name: Fail if docker-compose.nix was not created by command
+      fail:
+        msg: "docker-compose.nix file was not created."
+      when: not output_file_check.stat.exists 
+
+    - name: Read the contents of docker-compose.nix
+      slurp:
+        path: "{{ output_file }}"
+      register: something_content
+
+    - name: Apply template using the contents of docker-compose.nix
+      template:
+        src: ../templates/_server.nix.j2
+        dest: "{{ destination_path }}/default.nix"
+      vars:
+        something_data: "{{ lookup('file', output_file) }}"
+
+    - name: Commit changes with a message
+      command: git commit -m "Updated immich configuration for version {{ immich_version }}"
+      args:
+        chdir: "{{ repo_path }}"
+      when: git_checkout.rc == 0
