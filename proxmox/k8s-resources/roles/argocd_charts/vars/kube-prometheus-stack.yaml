@@ -1,6 +1,6 @@
 chart_name: "kube-prometheus-stack"
 repoURL: 'https://prometheus-community.github.io/helm-charts'
-chart_version: 62.7.0
+chart_version: 63.1.0
 namespace: "monitoring"
 chart_values: 
   grafana:
@@ -13,7 +13,6 @@ chart_values:
         kubernetes.io/tls-acme: "true"
       hosts:
         - grafana.k8s.olmden.si
-
       tls:
         - secretName: grafana.k8s.olmden.si
           hosts:

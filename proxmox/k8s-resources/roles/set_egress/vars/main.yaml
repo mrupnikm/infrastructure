@@ -1,5 +1,3 @@
 services:
-  - name: "tp-worker"
-    hostname: "tp-worker.tailf3f14.ts.net" 
-  - name: "pihole "
+  - name: "pihole"
     hostname: "pihole-proxmox.tailf3f14.ts.net" 

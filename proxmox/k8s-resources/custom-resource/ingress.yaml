@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: immich
+  namespace: immich
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    external-dns.alpha.kubernetes.io/hostname: immich.k8s.olmden.si
+    kubernetes.io/tls-acme: 'true'
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - immich.k8s.olmden.si
+      secretName: olmden-si
+  rules:
+    - host: immich.k8s.olmden.si
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: ts-ts-egress-az-blue-s5nvr
+                port:
+                  number: 2283
