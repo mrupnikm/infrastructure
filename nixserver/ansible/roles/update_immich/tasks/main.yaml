@@ -6,7 +6,8 @@
     destination_path: "/home/mrupnik/Nix-server/modules/containers/immich" 
     output_file: "{{ destination_path }}/docker-compose.nix"
     repo_path: "/home/mrupnik/Nix-server"
-
+    env_file: "{{ destination_path }}/.env"
+    sh_file: "{{ destination_path }}/upgrade.sh"
   tasks:             
 
     - name: Checkout new branch
@@ -20,7 +21,19 @@
         url: "https://github.com/immich-app/immich/releases/download/{{ immich_version }}/docker-compose.yml"
         dest: "{{ destination_path }}/docker-compose.yml"
 
-    - name: Run command to output a new file (custom command)
+    - name: Update IMMICH_VERSION in the .env file
+      replace:
+        path: "{{ env_file }}"
+        regexp: '^IMMICH_VERSION=.*'
+        replace: 'IMMICH_VERSION={{ immich_version }}'
+
+    - name: Update IMMICH_VERSION in the upgrade.sh file
+      replace:
+        path: "{{ sh_file }}"
+        regexp: '^VERSION=.*'
+        replace: 'VERSION={{ immich_version }}'
+
+    - name: Run command to output a new file
       command: nix run github:aksiksi/compose2nix --  --env_files=.env -project="immich" -runtime="docker"
       args:
         chdir: ~/Nix-server/modules/containers/immich 
@@ -48,7 +61,25 @@
         something_data: "{{ lookup('file', output_file) }}"
 
     - name: Commit changes with a message
+      command: git add *
+      args:
+        chdir: "{{ repo_path }}"
+      when: git_checkout.rc == 0
+
+    - name: Commit changes with a message
       command: git commit -m "Updated immich configuration for version {{ immich_version }}"
       args:
         chdir: "{{ repo_path }}"
       when: git_checkout.rc == 0
+
+    - name: Stop systemd service running docker compose
+      become: yes
+      systemd:
+        name: docker-compose-immich-root.target
+        state: stopped
+
+    - name: Snapshot data directory
+      become: yes
+      command: btrfs subvolume snapshot /mnt/sdb/data/immich_1 /mnt/sdb/data/.snapshots/immich_PRE-{{ immich_version }}
+      args:
+        chdir: "{{ repo_path }}"
