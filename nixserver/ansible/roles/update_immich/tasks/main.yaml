@@ -74,9 +74,7 @@
 
     - name: Stop systemd service running docker compose
       become: yes
-      systemd:
-        name: docker-compose-immich-root.target
-        state: stopped
+      command: systemctl stop docker-compose-immich-root.target
 
     - name: Snapshot data directory
       become: yes
