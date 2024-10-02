@@ -1,9 +1,9 @@
 { pkgs, lib, config, ... }: {
 
   options = {
-    immich_d.enable = lib.mkEnableOption "enables immich";
+    immich-d.enable = lib.mkEnableOption "enables immich";
   };
-  config = lib.mkIf config.immich_d.enable {
+  config = lib.mkIf config.immich-d.enable {
     {{ something_data | indent(4) }}
   };
 }
