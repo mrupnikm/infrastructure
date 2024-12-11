@@ -18,11 +18,11 @@
 #   hosts: k8s-nodes
 #   roles:
 #     - set_egress
-    
+
 - name: Deploy Operators
   hosts: k8s-nodes
   vars:
     apps:
-      - "kube-prometheus-stack"
+      - "infisical-operator"
   roles:
     - argocd_charts

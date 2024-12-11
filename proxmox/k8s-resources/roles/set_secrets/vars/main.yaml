@@ -1,11 +1,17 @@
 secrets:
-  - name: "pihole-password"
-    namespace: "default"
+#  - name: "pihole-password"
+#    namespace: "default"
+#    data:
+#      EXTERNAL_DNS_PIHOLE_PASSWORD: ""
+#  - name: "operator-oauth"
+#    namespace: "tailscale"
+#    data:
+#      client_id: ""
+#      client_secret: ""
+  - name: "infisical-secrets"
+    namespace: "infisical"
     data:
-      EXTERNAL_DNS_PIHOLE_PASSWORD: ""
-  - name: "operator-oauth"
-    namespace: "tailscale"
-    data:
-      client_id: ""
-      client_secret: ""
+      AUTH_SECRET: GKjbZwnE3DcI/5T7LkGlO1iJosh1kcRmo6Yno+yHIv8=
+      ENCRYPTION_KEY: dae36702736b97f4b9be06cc36b8b940
+      SITE_URL: "https://infisical.olmden.si"
   

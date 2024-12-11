@@ -1,0 +1,5 @@
+chart_name: "secrets-operator"
+repoURL: 'https://dl.cloudsmith.io/public/infisical/helm-charts/helm/charts/'
+chart_version: 0.7.5
+namespace: "infisical"
+chart_values: {}

@@ -1,0 +1,31 @@
+chart_name: "infisical-standalone"
+repoURL: 'https://dl.cloudsmith.io/public/infisical/helm-charts/helm/charts/'
+chart_version: 1.4.0
+namespace: "infisical"
+chart_values:
+  externalURL: "https://harbor.olmden.si"
+  ingress:
+    hosts:
+      core: "infisical.olmden.si"
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod # name of the issuer we defined before
+      external-dns.alpha.kubernetes.io/hostname: "infisical.olmden.si"
+      kubernetes.io/tls-acme: "true"
+  tls:
+    secret:
+      secretName: infisical.olmden-si
+  infisical:
+    image:
+      repository: infisical/infisical
+      tag: "v0.97.0-postgres"
+      pullPolicy: IfNotPresent
+    autoDatabaseSchemaMigration: true 
+  postgresql:
+    persistence:
+      enabled: false
+  redis:
+    primary:
+      persistence:
+        enabled: false
